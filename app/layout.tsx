@@ -48,7 +48,24 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     icons: {
-      icon: "/favicon.svg",
+      icon: [
+        {
+          url: "/favicon-32x32.png",
+          type: "image/png",
+          sizes: "32x32",
+        },
+        {
+          url: "/favicon.svg",
+          type: "image/svg+xml",
+        },
+      ],
+      apple: [
+        {
+          url: "/apple-touch-icon.png",
+          type: "image/png",
+          sizes: "180x180",
+        },
+      ],
     },
     openGraph: {
       title,

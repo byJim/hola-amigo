@@ -48,6 +48,18 @@ test("server-renders the byJim Matrix landing page", async () => {
   );
   assert.match(
     html,
+    /<link rel="icon" href="https:\/\/byjim\.dev\/favicon-32x32\.png"[^>]*sizes="32x32"[^>]*type="image\/png"\/>/i,
+  );
+  assert.match(
+    html,
+    /<link rel="icon" href="https:\/\/byjim\.dev\/favicon\.svg"[^>]*type="image\/svg\+xml"\/>/i,
+  );
+  assert.match(
+    html,
+    /<link rel="apple-touch-icon" href="https:\/\/byjim\.dev\/apple-touch-icon\.png"[^>]*sizes="180x180"[^>]*type="image\/png"\/>/i,
+  );
+  assert.match(
+    html,
     /<meta property="og:title" content="¿Hola amigo\? — byJim\.dev"\/>/i,
   );
   assert.match(
@@ -88,13 +100,24 @@ test("uses the incoming host for the absolute social image URL", async () => {
 });
 
 test("keeps the animation accessible and removes the starter", async () => {
-  const [rain, css, page, layout, packageJson, socialImage] = await Promise.all([
+  const [
+    rain,
+    css,
+    page,
+    layout,
+    packageJson,
+    socialImage,
+    favicon,
+    appleTouchIcon,
+  ] = await Promise.all([
     readFile(new URL("../app/MatrixRain.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../public/og.png", import.meta.url)),
+    readFile(new URL("../public/favicon-32x32.png", import.meta.url)),
+    readFile(new URL("../public/apple-touch-icon.png", import.meta.url)),
   ]);
 
   assert.match(rain, /prefers-reduced-motion: reduce/);
@@ -109,6 +132,18 @@ test("keeps the animation accessible and removes the starter", async () => {
   );
   assert.equal(socialImage.readUInt32BE(16), 1200);
   assert.equal(socialImage.readUInt32BE(20), 630);
+  assert.deepEqual(
+    [...favicon.subarray(0, 8)],
+    [137, 80, 78, 71, 13, 10, 26, 10],
+  );
+  assert.equal(favicon.readUInt32BE(16), 32);
+  assert.equal(favicon.readUInt32BE(20), 32);
+  assert.deepEqual(
+    [...appleTouchIcon.subarray(0, 8)],
+    [137, 80, 78, 71, 13, 10, 26, 10],
+  );
+  assert.equal(appleTouchIcon.readUInt32BE(16), 180);
+  assert.equal(appleTouchIcon.readUInt32BE(20), 180);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   await assert.rejects(access(previewRoot));
   await assert.rejects(access(new URL("public/_sites-preview", templateRoot)));
