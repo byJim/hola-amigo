@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --matrix-black: #020705;
+  --matrix-green: #20f977;
+  --matrix-white: #ddffe8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--matrix-black);
+  color: var(--matrix-white);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+.matrix-page {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--matrix-black);
+}
+
+.matrix-page::before,
+.matrix-page::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  content: "";
+}
+
+.matrix-page::before {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(111, 255, 170, 0.035) 4px
+  );
+  mix-blend-mode: screen;
+}
+
+.matrix-page::after {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0, 18, 8, 0.08) 0%,
+      rgba(0, 9, 4, 0.42) 58%,
+      rgba(0, 0, 0, 0.92) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.16),
+      transparent 35%,
+      rgba(0, 0, 0, 0.34)
+    );
+}
+
+.matrix-rain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.matrix-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 42% 31% at 50% 49%,
+    rgba(1, 10, 5, 0.96) 0%,
+    rgba(1, 10, 5, 0.75) 38%,
+    rgba(1, 10, 5, 0.12) 78%,
+    transparent 100%
+  );
+}
+
+.matrix-copy {
+  position: relative;
+  z-index: 4;
+  width: min(100% - 2rem, 72rem);
+  padding: 2rem 1rem;
+  text-align: center;
+  animation: signal-in 1.4s cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+.matrix-copy h1 {
+  margin: 0;
+  color: var(--matrix-white);
+  font-size: clamp(2.35rem, 9.5vw, 7.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: 0.025em;
+  text-wrap: balance;
+  text-shadow:
+    0 0 3px rgba(224, 255, 235, 0.95),
+    0 0 13px rgba(33, 255, 122, 0.9),
+    0 0 34px rgba(0, 255, 102, 0.52),
+    0 0 70px rgba(0, 255, 102, 0.25);
+}
+
+.matrix-copy p {
+  margin: clamp(1.1rem, 3vw, 1.8rem) 0 0;
+  color: var(--matrix-green);
+  font-size: clamp(0.82rem, 2.1vw, 1.18rem);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-shadow:
+    0 0 7px rgba(32, 249, 119, 0.86),
+    0 0 24px rgba(0, 255, 102, 0.4);
+}
+
+.matrix-horizon {
+  position: absolute;
+  right: 10%;
+  bottom: -15vh;
+  left: 10%;
+  z-index: 3;
+  height: 24vh;
+  border-radius: 50%;
+  pointer-events: none;
+  background: rgba(14, 255, 112, 0.08);
+  filter: blur(46px);
+}
+
+@keyframes signal-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(12px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .matrix-copy h1 {
+    letter-spacing: 0;
+  }
+
+  .matrix-copy p {
+    letter-spacing: 0.24em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matrix-copy {
+    animation: none;
+  }
+
+  .matrix-page::before {
+    opacity: 0.35;
+  }
+}
